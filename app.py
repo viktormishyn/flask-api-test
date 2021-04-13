@@ -131,5 +131,12 @@ def url_variables(name: str, age: int):
         return jsonify(message=f"Welcome, {name}, you are old enough!")
 
 
+@app.route('/api/planets', methods=['GET'])
+def planets():
+    planets_list = Planet.query.all()
+    result = planets_schema.dump(planets_list)
+    return jsonify(result)
+
+
 if __name__ == '__main__':
     app.run()
