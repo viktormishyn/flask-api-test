@@ -1,6 +1,10 @@
 from flask import Flask, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, String, Float
+from config import TestingConfig
 
 app = Flask(__name__)
+app.config.from_object(TestingConfig)
 
 
 @app.route('/')
@@ -29,7 +33,6 @@ def url_variables(name: str, age: int):
         return jsonify(message=f"Sorry, {name}, you are not old enough."), 401
     else:
         return jsonify(message=f"Welcome, {name}, you are old enough!")
-
 
 
 if __name__ == '__main__':
