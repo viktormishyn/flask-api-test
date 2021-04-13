@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float
 from config import TestingConfig
+from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 app.config.from_object(TestingConfig)
@@ -9,6 +10,7 @@ app.config.from_object(TestingConfig)
 # ================== DATABASE ==================
 
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 
 class User(db.Model):
@@ -29,6 +31,25 @@ class Planet(db.Model):
     mass = Column(Float)
     radius = Column(Float)
     distance = Column(Float)
+
+
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'first_name', 'last_name', 'email', 'password')
+
+
+class PlanetSchema(ma.Schema):
+    class Meta:
+        fields = ('planed_id', 'planet_name', 'planet_type', 'home_star', 'mass', 'radius', 'distance')
+
+
+user_schema = UserSchema()
+# deserialize one object
+users_schema = UserSchema(many=True)
+# deserialize a collection of objects
+
+planet_schema = PlanetSchema()
+planets_schema = PlanetSchema(many=True)
 
 
 # CLI: flask <command>
@@ -108,7 +129,6 @@ def url_variables(name: str, age: int):
         return jsonify(message=f"Sorry, {name}, you are not old enough."), 401
     else:
         return jsonify(message=f"Welcome, {name}, you are old enough!")
-
 
 
 if __name__ == '__main__':
